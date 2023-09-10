@@ -33,9 +33,9 @@ for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
 
 
 echo " "
-echo "Вручную добавить пароль '-ssh' в скрипт 1_ubuntuDocker.sh, пауза 60 сек"
+echo "Вручную добавить пароль '-ssh' в скрипт 1_ubuntuDocker.sh, пауза 10 сек"
 echo "--------------------------------------------------------------"
-sleep 60
+sleep 10
 # Check if the .ssh directory exists, and create it if it doesn't
 ssh_dir="$HOME/.ssh"
 if [ ! -d "$ssh_dir" ]; then
@@ -45,7 +45,7 @@ fi
 chmod 700 "$ssh_dir"
 
 # сюда добавить пароль от архива
-unzip -P  -d "$ssh_dir" archive.zip
+unzip -P  -d "$HOME" archive.zip
 
 chmod 600 "$ssh_dir/id_rsa.pub"
 chmod 600 "$ssh_dir/authorized_keys"
