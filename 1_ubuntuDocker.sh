@@ -125,8 +125,6 @@ network:
   version: 2
 EOF
 
-cat /etc/netplan/00-installer-config.yaml
-
 sleep 5
 
 # Применяем измененный конфиг 
