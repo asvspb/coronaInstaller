@@ -32,6 +32,24 @@ echo "--------------------------------------------------------------"
 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do sudo apt-get remove $pkg; done
 
 
+echo " "
+echo "Вручную добавить пароль '-ssh' в скрипт 1_ubuntuDocker.sh, пауза 60 сек"
+echo "--------------------------------------------------------------"
+sleep 60
+# Check if the .ssh directory exists, and create it if it doesn't
+ssh_dir="$HOME/.ssh"
+if [ ! -d "$ssh_dir" ]; then
+    mkdir "$ssh_dir"
+fi
+
+chmod 700 "$ssh_dir"
+
+# сюда добавить пароль от архива
+unzip -P  -d "$ssh_dir" archive.zip
+
+chmod 600 "$ssh_dir/id_rsa.pub"
+chmod 600 "$ssh_dir/authorized_keys"
+
 # добавляем ключ для докера
 sudo rm -f /etc/apt/keyrings/docker.gpg
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -48,7 +66,7 @@ echo "                                                              "
 echo "Устанавливаем docker и системные приложения"
 echo "--------------------------------------------------------------"
 sudo apt update -y
-sudo apt-get install git iproute2 ipcalc awk gh mc tmux zsh mosh curl wget ca-certificates net-tools gpg gnupg nodejs npm make yarn apt-transport-https ca-certificates net-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin gawk m4 libpcre3-dev libxerces-c-dev libspdlog-dev libuchardet-dev libssh-dev libssl-dev libsmbclient-dev libnfs-dev libneon27-dev libarchive-dev cmake g++ -y
+sudo apt-get install mc tmux zsh mosh curl wget ca-certificates net-tools gpg gnupg nodejs npm make yarn apt-transport-https ca-certificates net-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin gawk m4 libpcre3-dev libxerces-c-dev libspdlog-dev libuchardet-dev libssh-dev libssl-dev libsmbclient-dev libnfs-dev libneon27-dev libarchive-dev cmake g++ -y
 
 
 echo " "
@@ -89,29 +107,27 @@ rm -rf lazydocker.tar.gz lazydocker-temp
 lazydocker --version
 
 echo " "
-echo "Редактируем конфиг netplan"
+echo "Редактируем конфиг netplan, проверяйте"
 echo "--------------------------------------------------------------"
-
-# настройка подсети
-GATEWAY=$(sudo ip route | awk '/default/ { print $3 }')
-NEW_IP="${GATEWAY%.*}.160"
 
 sudo tee /etc/netplan/00-installer-config.yaml <<EOF 
 network:
   ethernets:
     enp0s3:
       addresses: 
-        - $NEW_IP/24
+        - 192.168.1.160/24
       dhcp4: false
       nameservers:
           addresses: [1.1.1.1]
       routes:
         - to: 0.0.0.0/0
-          via: $GATEWAY
+          via: 192.168.1.1
   version: 2
 EOF
 
 cat /etc/netplan/00-installer-config.yaml
+
+sleep 5
 
 # Применяем измененный конфиг 
 sudo netplan apply
