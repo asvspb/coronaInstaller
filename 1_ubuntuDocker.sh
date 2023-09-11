@@ -66,7 +66,7 @@ echo "                                                              "
 echo "Устанавливаем docker и системные приложения"
 echo "--------------------------------------------------------------"
 sudo apt update -y
-sudo apt-get install mc tmux zsh mosh curl wget ca-certificates net-tools gpg gnupg nodejs npm make yarn apt-transport-https ca-certificates net-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin gawk m4 libpcre3-dev libxerces-c-dev libspdlog-dev libuchardet-dev libssh-dev libssl-dev libsmbclient-dev libnfs-dev libneon27-dev libarchive-dev cmake g++ -y
+sudo apt-get install samba samba-common samba-libs mc tmux zsh mosh curl wget ca-certificates net-tools gpg gnupg nodejs npm make yarn apt-transport-https ca-certificates net-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin gawk m4 libpcre3-dev libxerces-c-dev libspdlog-dev libuchardet-dev libssh-dev libssl-dev libsmbclient-dev libnfs-dev libneon27-dev libarchive-dev cmake g++ -y
 
 
 echo " "
@@ -107,8 +107,13 @@ rm -rf lazydocker.tar.gz lazydocker-temp
 lazydocker --version
 
 echo " "
-echo "Редактируем конфиг samba"
+echo "Редактируем настройки samba"
 echo "--------------------------------------------------------------"
+
+sudo mkdir /samba
+sudo mkdir /samba/share
+sudo chown -R $USER:$USER /samba/share
+sudo smbpasswd -a $USER
 
 sudo tee /etc/samba/smb.conf <<EOF 
 [global]
@@ -156,8 +161,9 @@ sudo tee /etc/samba/smb.conf <<EOF
     valid users = %S
 EOF
 
-sudo smbpasswd -a $USER
-sudo systemctl restart smbd
+(echo 321321; echo 321321) | sudo smbpasswd -s -a corona
+sudo systemctl start smbd
+sudo systemctl enable smbd
 
 echo " "
 echo "Редактируем конфиг netplan, проверяйте"
