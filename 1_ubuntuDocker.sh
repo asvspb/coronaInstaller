@@ -45,7 +45,7 @@ fi
 chmod 700 "$ssh_dir"
 
 # сюда добавить пароль от архива
-unzip -P  -d "$HOME" archive.zip
+unzip -P тУтПаРоЛь -d "$HOME" archive.zip
 
 chmod 600 "$ssh_dir/id_rsa.pub"
 chmod 600 "$ssh_dir/authorized_keys"
