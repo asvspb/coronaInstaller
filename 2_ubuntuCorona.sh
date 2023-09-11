@@ -33,16 +33,6 @@ echo "--------------------------------------------------------------"
 
 make start
 
-echo "                                                              "
-echo "Делаем запись в /etc/hosts"
-echo "--------------------------------------------------------------"
-if ! grep -q 'ccq.l.cidious.com' /etc/hosts; then
-  local_ip=$(hostname -I | awk '{print $1}')
-echo "$local_ip ccq.l.cidious.com grafana-ccq.l.cidious.com redis-ccq.l.cidious.com monitor.l.cidious.com dash-ccq.l.cidious.com pgadmin" | sudo tee -a /etc/hosts
-fi
-
-cat /etc/hosts
-
 echo "--------------------------------------------------------------"
 echo "Установка завершена успешно!"
 echo "https://ccq.l.cidious.com/"
