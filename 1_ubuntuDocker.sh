@@ -113,8 +113,17 @@ echo "--------------------------------------------------------------"
 sudo mkdir /samba
 sudo mkdir /samba/share
 sudo chown -R $USER:$USER /samba/share
-sudo smbpasswd -a $USER
 
+#установка пароля на доступ к диску
+sudo smbpasswd -a $USER
+(echo 321321; echo 321321) | sudo smbpasswd -s -a corona
+
+#права на чтение логов
+sudo usermod -a -G adm corona
+sudo chgrp -R adm /var/log/samba
+sudo chmod -R g+r /var/log/samba
+
+#конфиг диска
 sudo tee /etc/samba/smb.conf <<EOF 
 [global]
    workgroup = WORKGROUP
@@ -161,9 +170,9 @@ sudo tee /etc/samba/smb.conf <<EOF
     valid users = %S
 EOF
 
-(echo 321321; echo 321321) | sudo smbpasswd -s -a corona
-sudo systemctl start smbd
+sudo systemctl daemon-reload
 sudo systemctl enable smbd
+sudo systemctl start smbd
 
 echo " "
 echo "Редактируем конфиг netplan, проверяйте"
