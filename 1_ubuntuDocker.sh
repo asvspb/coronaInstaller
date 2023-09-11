@@ -169,7 +169,6 @@ sudo tee /etc/samba/smb.conf <<EOF
     valid users = %S
 EOF
 
-sudo systemctl daemon-reload
 sudo systemctl enable smbd
 sudo systemctl start smbd
 
