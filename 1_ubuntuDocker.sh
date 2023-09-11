@@ -107,6 +107,59 @@ rm -rf lazydocker.tar.gz lazydocker-temp
 lazydocker --version
 
 echo " "
+echo "Редактируем конфиг samba"
+echo "--------------------------------------------------------------"
+
+sudo tee /etc/samba/smb.conf <<EOF 
+[global]
+   workgroup = WORKGROUP
+   server string = %h
+   dns proxy = no
+   log level = 2
+   log file = /var/log/samba/log.%m
+   max log size = 1000
+   panic action = /usr/share/samba/panic-action %d
+   ntlm auth = yes
+   server role = standalone server
+   passdb backend = smbpasswd:/etc/samba/smbpasswd
+   obey pam restrictions = no
+   unix password sync = no
+   passwd program = /usr/bin/passwd %u
+   passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+   pam password change = yes
+   map to guest = bad user
+   socket options = TCP_NODELAY
+   usershare allow guests = yes
+[printers]
+   comment = All Printers
+   browseable = no
+   path = /var/spool/samba
+   printable = yes
+   guest ok = no
+   read only = yes
+   create mask = 0700
+[print$]
+   comment = Printer Drivers
+   path = /var/lib/samba/printers
+   browseable = yes
+   read only = yes
+   guest ok = no
+[homes]
+   comment = Home Directories
+    printable=no
+    create mask=0664
+    directory mask=0775
+    browseable = yes
+    guest ok=no
+    writeable=yes
+    hosts allow=ALL
+    valid users = %S
+EOF
+
+sudo smbpasswd -a $USER
+sudo systemctl restart smbd
+
+echo " "
 echo "Редактируем конфиг netplan, проверяйте"
 echo "--------------------------------------------------------------"
 
