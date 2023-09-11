@@ -115,8 +115,7 @@ sudo mkdir /samba/share
 sudo chown -R $USER:$USER /samba/share
 
 #установка пароля на доступ к диску
-sudo smbpasswd -a $USER
-(echo 321321; echo 321321) | sudo smbpasswd -s -a corona
+(echo 321321; echo 321321) | sudo smbpasswd -s -a $USER
 
 #права на чтение логов
 sudo usermod -a -G adm corona
