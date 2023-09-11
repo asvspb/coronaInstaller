@@ -7,7 +7,7 @@
 	- если есть, удалить в папке .ssh отпечатки предыдущих конектов в файле known_hosts
  - на сервере:
 	- добавить пароль в первый скрипт
-		unzip -P password -d "$HOME/.ssh" archive.zip
+		unzip -P тУтПаРоЛь -d "$HOME" archive.zip
 	- установить докер
  - на винде:
 	- добавить в c:\windows\system32\drivers\etc\hosts
