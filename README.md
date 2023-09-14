@@ -1,4 +1,4 @@
-# coronaInstaller
+# coronaWinstaller
 
 # Краткое напоминание о процессе установки
 
